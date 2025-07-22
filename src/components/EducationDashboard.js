@@ -34,160 +34,218 @@ const EducationDashboard = () => {
   const [backendStatus, setBackendStatus] = useState('disconnected');
   const fileInputRef = useRef(null);
 
-  // Estilos CSS en JS para no depender de Tailwind
+  // Función para detectar el tamaño de pantalla
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isTablet, setIsTablet] = useState(window.innerWidth >= 768 && window.innerWidth < 1024);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Estilos responsive mejorados
   const styles = {
     container: {
       minHeight: '100vh',
-      background: 'black',
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif'
+      background: 'linear-gradient(135deg,rgb(0, 0, 0) 0%,rgb(0, 0, 0) 100%)',
+      padding: isMobile ? '10px' : isTablet ? '15px' : '20px',
+      fontFamily: 'Arial, sans-serif',
+      width: '100%',
+      boxSizing: 'border-box'
     },
     header: {
       textAlign: 'center',
-      marginBottom: '30px',
-      color: 'white'
+      marginBottom: isMobile ? '20px' : '30px',
+      color: 'white',
+      padding: isMobile ? '10px' : '20px'
     },
     title: {
-      fontSize: '2.5rem',
+      fontSize: isMobile ? '1.8rem' : isTablet ? '2.2rem' : '2.5rem',
       fontWeight: 'bold',
       marginBottom: '10px',
-      textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+      textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+      lineHeight: 1.2
     },
     subtitle: {
-      fontSize: '1.2rem',
-      opacity: 0.9
+      fontSize: isMobile ? '0.9rem' : isTablet ? '1.1rem' : '1.2rem',
+      opacity: 0.9,
+      padding: isMobile ? '0 10px' : '0'
     },
     card: {
       backgroundColor: 'white',
-      borderRadius: '12px',
-      padding: '24px',
-      marginBottom: '24px',
+      borderRadius: isMobile ? '8px' : '12px',
+      padding: isMobile ? '15px' : isTablet ? '20px' : '24px',
+      marginBottom: isMobile ? '15px' : '24px',
       boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-      border: '1px solid rgba(255,255,255,0.2)'
+      border: '1px solid rgba(255,255,255,0.2)',
+      width: '100%',
+      boxSizing: 'border-box'
     },
     controlPanel: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '20px',
-      alignItems: 'center'
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      gap: isMobile ? '15px' : '20px',
+      alignItems: isMobile ? 'stretch' : 'center',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap'
     },
     fileSection: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '10px'
+      gap: '10px',
+      flex: 1,
+      minWidth: isMobile ? '100%' : '250px'
     },
     fileButton: {
       display: 'flex',
       alignItems: 'center',
+      justifyContent: 'center',
       gap: '8px',
       backgroundColor: '#3B82F6',
       color: 'white',
-      padding: '12px 20px',
+      padding: isMobile ? '15px 20px' : '12px 20px',
       borderRadius: '8px',
       border: 'none',
       cursor: 'pointer',
-      fontSize: '14px',
+      fontSize: isMobile ? '16px' : '14px',
       fontWeight: '500',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s ease',
+      width: '100%',
+      boxSizing: 'border-box'
+    },
+    statusSection: {
+      flex: 1,
+      minWidth: isMobile ? '100%' : '250px'
     },
     sendButton: {
       display: 'flex',
       alignItems: 'center',
+      justifyContent: 'center',
       gap: '8px',
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       color: 'white',
-      padding: '15px 30px',
+      padding: isMobile ? '15px 25px' : '15px 30px',
       borderRadius: '10px',
       border: 'none',
       cursor: 'pointer',
-      fontSize: '16px',
+      fontSize: isMobile ? '16px' : '16px',
       fontWeight: 'bold',
       boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
       transition: 'all 0.3s ease',
-      justifySelf: 'end'
+      width: isMobile ? '100%' : 'auto',
+      minWidth: isMobile ? 'auto' : '200px'
     },
     statsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-      gap: '20px',
-      marginBottom: '30px'
+      gridTemplateColumns: isMobile 
+        ? '1fr' 
+        : isTablet 
+          ? 'repeat(2, 1fr)' 
+          : 'repeat(auto-fit, minmax(250px, 1fr))',
+      gap: isMobile ? '15px' : '20px',
+      marginBottom: isMobile ? '20px' : '30px'
     },
     statCard: {
       backgroundColor: 'white',
-      borderRadius: '12px',
-      padding: '20px',
+      borderRadius: isMobile ? '8px' : '12px',
+      padding: isMobile ? '15px' : '20px',
       boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
       transition: 'transform 0.3s ease',
-      border: '1px solid rgba(255,255,255,0.2)'
+      border: '1px solid rgba(255,255,255,0.2)',
+      width: '100%',
+      boxSizing: 'border-box'
     },
     statHeader: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: '15px'
+      marginBottom: '15px',
+      flexWrap: 'wrap',
+      gap: '5px'
     },
     statValue: {
-      fontSize: '2.5rem',
+      fontSize: isMobile ? '2rem' : isTablet ? '2.2rem' : '2.5rem',
       fontWeight: 'bold',
       color: '#3B82F6',
       marginBottom: '5px'
     },
     chartsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
-      gap: '30px',
-      marginBottom: '30px'
+      gridTemplateColumns: isMobile 
+        ? '1fr' 
+        : isTablet 
+          ? '1fr' 
+          : 'repeat(auto-fit, minmax(450px, 1fr))',
+      gap: isMobile ? '20px' : '30px',
+      marginBottom: isMobile ? '20px' : '30px'
     },
     chartCard: {
       backgroundColor: 'white',
-      borderRadius: '12px',
-      padding: '25px',
+      borderRadius: isMobile ? '8px' : '12px',
+      padding: isMobile ? '15px' : isTablet ? '20px' : '25px',
       boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
-      border: '1px solid rgba(255,255,255,0.2)'
+      border: '1px solid rgba(255,255,255,0.2)',
+      width: '100%',
+      boxSizing: 'border-box'
     },
     chartTitle: {
-      fontSize: '1.3rem',
+      fontSize: isMobile ? '1.1rem' : isTablet ? '1.2rem' : '1.3rem',
       fontWeight: 'bold',
-      marginBottom: '20px',
+      marginBottom: isMobile ? '15px' : '20px',
       color: '#1f2937',
       display: 'flex',
       alignItems: 'center',
-      gap: '10px'
+      gap: '10px',
+      flexWrap: 'wrap'
+    },
+    tableContainer: {
+      width: '100%',
+      overflowX: 'auto',
+      marginBottom: isMobile ? '20px' : '0'
     },
     table: {
       width: '100%',
       borderCollapse: 'collapse',
       backgroundColor: 'white',
-      borderRadius: '12px',
+      borderRadius: isMobile ? '8px' : '12px',
       overflow: 'hidden',
-      boxShadow: '0 8px 20px rgba(0,0,0,0.1)'
+      boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
+      minWidth: isMobile ? '600px' : 'auto'
     },
     tableHeader: {
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       color: 'white',
-      padding: '20px',
-      fontSize: '1.2rem',
-      fontWeight: 'bold'
+      padding: isMobile ? '15px 10px' : '20px',
+      fontSize: isMobile ? '1rem' : '1.2rem',
+      fontWeight: 'bold',
+      textAlign: 'center'
     },
     th: {
-      padding: '15px',
+      padding: isMobile ? '10px 8px' : '15px',
       textAlign: 'left',
       fontWeight: 'bold',
       color: '#374151',
-      borderBottom: '2px solid #e5e7eb'
+      borderBottom: '2px solid #e5e7eb',
+      fontSize: isMobile ? '0.85rem' : '1rem'
     },
     td: {
-      padding: '12px 15px',
-      borderBottom: '1px solid #f3f4f6'
+      padding: isMobile ? '10px 8px' : '12px 15px',
+      borderBottom: '1px solid #f3f4f6',
+      fontSize: isMobile ? '0.85rem' : '1rem'
     },
     statusBadge: {
       display: 'inline-flex',
       alignItems: 'center',
       gap: '5px',
-      padding: '5px 10px',
+      padding: isMobile ? '6px 12px' : '5px 10px',
       borderRadius: '20px',
-      fontSize: '12px',
-      fontWeight: '500'
+      fontSize: isMobile ? '11px' : '12px',
+      fontWeight: '500',
+      marginTop: '5px'
     },
     spinner: {
       width: '20px',
@@ -196,6 +254,18 @@ const EducationDashboard = () => {
       borderTop: '2px solid transparent',
       borderRadius: '50%',
       animation: 'spin 1s linear infinite'
+    },
+    metricsGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+      gap: isMobile ? '15px' : '20px'
+    },
+    footer: {
+      textAlign: 'center',
+      marginTop: isMobile ? '30px' : '40px',
+      color: 'white',
+      opacity: 0.8,
+      padding: isMobile ? '15px' : '0'
     }
   };
 
@@ -279,13 +349,41 @@ const EducationDashboard = () => {
           transform: translateY(-2px);
           box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
+        
+        /* Responsive scrollbar for table */
+        .table-container::-webkit-scrollbar {
+          height: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+          background: #c1c1c1;
+          border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+          background: #a8a8a8;
+        }
+
+        /* Responsive text */
+        @media (max-width: 767px) {
+          .recharts-cartesian-axis-tick-value {
+            font-size: 12px !important;
+          }
+          .recharts-legend-item-text {
+            font-size: 12px !important;
+          }
+        }
       `}</style>
       
       <div style={styles.container}>
         {/* Header */}
         <div style={styles.header}>
           <h1 style={styles.title}>📊 Dashboard Estadísticas Educativas</h1>
-
+          {/* <p style={styles.subtitle}>
+            Ministerio de Educación Nacional - Análisis de Deserción 2018-2022
+          </p> */}
         </div>
 
         {/* Panel de Control */}
@@ -293,7 +391,9 @@ const EducationDashboard = () => {
           <div style={styles.controlPanel}>
             {/* Sección de archivo */}
             <div style={styles.fileSection}>
-              <h3 style={{ margin: '0 0 10px 0', color: '#374151' }}>📁 Cargar Excel</h3>
+              <h3 style={{ margin: '0 0 10px 0', color: '#374151', fontSize: isMobile ? '1rem' : '1.1rem' }}>
+                📁 Cargar Excel
+              </h3>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -310,16 +410,34 @@ const EducationDashboard = () => {
                 Seleccionar Archivo Excel
               </button>
               {selectedFile && (
-                <p style={{ margin: '5px 0', color: '#6b7280', fontSize: '14px' }}>
+                <p style={{ 
+                  margin: '5px 0', 
+                  color: '#6b7280', 
+                  fontSize: isMobile ? '13px' : '14px',
+                  wordBreak: 'break-word'
+                }}>
                   📄 {selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)
                 </p>
               )}
             </div>
 
             {/* Estado */}
-            <div>
-              <h3 style={{ margin: '0 0 10px 0', color: '#374151' }}>📊 Estado del Sistema</h3>
-              <p style={{ margin: '5px 0', color: '#374151' }}>{uploadStatus}</p>
+            <div style={styles.statusSection}>
+              <h3 style={{ 
+                margin: '0 0 10px 0', 
+                color: '#374151', 
+                fontSize: isMobile ? '1rem' : '1.1rem' 
+              }}>
+                📊 Estado del Sistema
+              </h3>
+              <p style={{ 
+                margin: '5px 0', 
+                color: '#374151', 
+                fontSize: isMobile ? '14px' : '15px',
+                wordBreak: 'break-word'
+              }}>
+                {uploadStatus}
+              </p>
               <div style={{...styles.statusBadge, ...getStatusColor()}}>
                 {backendStatus === 'connected' ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
                 Backend Python: {backendStatus === 'connected' ? 'Conectado' : 'Desconectado'}
@@ -357,14 +475,31 @@ const EducationDashboard = () => {
           {educationData.map((item, index) => (
             <div key={index} style={styles.statCard} className="stat-card">
               <div style={styles.statHeader}>
-                <Users size={32} color="#3B82F6" />
-                <span style={{ fontSize: '12px', color: '#6b7280' }}>Promedio 2018-2022</span>
+                <Users size={isMobile ? 28 : 32} color="#3B82F6" />
+                <span style={{ 
+                  fontSize: isMobile ? '11px' : '12px', 
+                  color: '#6b7280',
+                  textAlign: 'right'
+                }}>
+                  Promedio 2018-2022
+                </span>
               </div>
-              <h3 style={{ margin: '0 0 10px 0', color: '#1f2937', fontSize: '1.1rem' }}>
+              <h3 style={{ 
+                margin: '0 0 10px 0', 
+                color: '#1f2937', 
+                fontSize: isMobile ? '1rem' : '1.1rem',
+                lineHeight: 1.3
+              }}>
                 {item.nivel}
               </h3>
               <div style={styles.statValue}>{calculateAverage(item)}%</div>
-              <p style={{ margin: 0, color: '#6b7280', fontSize: '14px' }}>Tasa de deserción</p>
+              <p style={{ 
+                margin: 0, 
+                color: '#6b7280', 
+                fontSize: isMobile ? '13px' : '14px' 
+              }}>
+                Tasa de deserción
+              </p>
             </div>
           ))}
         </div>
@@ -375,23 +510,37 @@ const EducationDashboard = () => {
           <div style={styles.chartCard}>
             <h3 style={styles.chartTitle}>
               <TrendingDown size={20} color="#EF4444" />
-              Evolución Temporal de Deserción
+              <span>Evolución Temporal de Deserción</span>
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="año" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
+                <XAxis 
+                  dataKey="año" 
+                  stroke="#6b7280" 
+                  fontSize={isMobile ? 12 : 14}
+                />
+                <YAxis 
+                  stroke="#6b7280"
+                  fontSize={isMobile ? 12 : 14}
+                />
                 <Tooltip 
                   formatter={(value) => [`${value}%`, '']}
                   labelStyle={{ color: '#1f2937' }}
-                  contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  contentStyle={{ 
+                    backgroundColor: '#ffffff', 
+                    border: '1px solid #e5e7eb', 
+                    borderRadius: '8px',
+                    fontSize: isMobile ? '12px' : '14px'
+                  }}
                 />
-                <Legend />
-                <Line type="monotone" dataKey="Universitario" stroke="#3B82F6" strokeWidth={3} dot={{ r: 5 }} />
-                <Line type="monotone" dataKey="T&T" stroke="#EF4444" strokeWidth={3} dot={{ r: 5 }} />
-                <Line type="monotone" dataKey="T.Profesional" stroke="#F59E0B" strokeWidth={3} dot={{ r: 5 }} />
-                <Line type="monotone" dataKey="Especialización" stroke="#10B981" strokeWidth={3} dot={{ r: 5 }} />
+                <Legend 
+                  wrapperStyle={{ fontSize: isMobile ? '12px' : '14px' }}
+                />
+                <Line type="monotone" dataKey="Universitario" stroke="#3B82F6" strokeWidth={isMobile ? 2 : 3} dot={{ r: isMobile ? 3 : 5 }} />
+                <Line type="monotone" dataKey="T&T" stroke="#EF4444" strokeWidth={isMobile ? 2 : 3} dot={{ r: isMobile ? 3 : 5 }} />
+                <Line type="monotone" dataKey="T.Profesional" stroke="#F59E0B" strokeWidth={isMobile ? 2 : 3} dot={{ r: isMobile ? 3 : 5 }} />
+                <Line type="monotone" dataKey="Especialización" stroke="#10B981" strokeWidth={isMobile ? 2 : 3} dot={{ r: isMobile ? 3 : 5 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -400,18 +549,32 @@ const EducationDashboard = () => {
           <div style={styles.chartCard}>
             <h3 style={styles.chartTitle}>
               <Calendar size={20} color="#8B5CF6" />
-              Comparación 2022
+              <span>Comparación 2022</span>
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
               <BarChart data={chartData.slice(-1)}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="año" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
+                <XAxis 
+                  dataKey="año" 
+                  stroke="#6b7280"
+                  fontSize={isMobile ? 12 : 14}
+                />
+                <YAxis 
+                  stroke="#6b7280"
+                  fontSize={isMobile ? 12 : 14}
+                />
                 <Tooltip 
                   formatter={(value) => [`${value}%`, '']}
-                  contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  contentStyle={{ 
+                    backgroundColor: '#ffffff', 
+                    border: '1px solid #e5e7eb', 
+                    borderRadius: '8px',
+                    fontSize: isMobile ? '12px' : '14px'
+                  }}
                 />
-                <Legend />
+                <Legend 
+                  wrapperStyle={{ fontSize: isMobile ? '12px' : '14px' }}
+                />
                 <Bar dataKey="Universitario" fill="#3B82F6" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="T&T" fill="#EF4444" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="T.Profesional" fill="#F59E0B" radius={[4, 4, 0, 0]} />
@@ -424,17 +587,17 @@ const EducationDashboard = () => {
           <div style={styles.chartCard}>
             <h3 style={styles.chartTitle}>
               <Activity size={20} color="#10B981" />
-              Distribución de Deserción 2022
+              <span>Distribución de Deserción 2022</span>
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, value }) => `${name}: ${value}%`}
-                  outerRadius={80}
+                  label={({ name, value }) => isMobile ? `${value}%` : `${name}: ${value}%`}
+                  outerRadius={isMobile ? 60 : 80}
                   fill="#8884d8"
                   dataKey="value"
                 >
@@ -442,7 +605,10 @@ const EducationDashboard = () => {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => [`${value}%`, 'Tasa de Deserción']} />
+                <Tooltip 
+                  formatter={(value) => [`${value}%`, 'Tasa de Deserción']}
+                  contentStyle={{ fontSize: isMobile ? '12px' : '14px' }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -451,30 +617,38 @@ const EducationDashboard = () => {
           <div style={styles.chartCard}>
             <h3 style={styles.chartTitle}>
               <FileSpreadsheet size={20} color="#3B82F6" />
-              Resumen Estadístico
+              <span>Resumen Estadístico</span>
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div style={styles.metricsGrid}>
               <div>
-                <h4 style={{ color: '#374151', marginBottom: '10px' }}>📈 Tendencias</h4>
-                <p style={{ margin: '5px 0', color: '#6b7280' }}>
+                <h4 style={{ 
+                  color: '#374151', 
+                  marginBottom: '10px',
+                  fontSize: isMobile ? '1rem' : '1.1rem'
+                }}>📈 Tendencias</h4>
+                <p style={{ margin: '5px 0', color: '#6b7280', fontSize: isMobile ? '13px' : '14px' }}>
                   • Mayor deserción: Técnico Profesional (16.98%)
                 </p>
-                <p style={{ margin: '5px 0', color: '#6b7280' }}>
+                <p style={{ margin: '5px 0', color: '#6b7280', fontSize: isMobile ? '13px' : '14px' }}>
                   • Menor deserción: Especialización (4.18%)
                 </p>
-                <p style={{ margin: '5px 0', color: '#6b7280' }}>
+                <p style={{ margin: '5px 0', color: '#6b7280', fontSize: isMobile ? '13px' : '14px' }}>
                   • Tendencia general: Descendente
                 </p>
               </div>
               <div>
-                <h4 style={{ color: '#374151', marginBottom: '10px' }}>🎯 Objetivos</h4>
-                <p style={{ margin: '5px 0', color: '#6b7280' }}>
+                <h4 style={{ 
+                  color: '#374151', 
+                  marginBottom: '10px',
+                  fontSize: isMobile ? '1rem' : '1.1rem'
+                }}>🎯 Objetivos</h4>
+                <p style={{ margin: '5px 0', color: '#6b7280', fontSize: isMobile ? '13px' : '14px' }}>
                   • Reducir deserción técnica
                 </p>
-                <p style={{ margin: '5px 0', color: '#6b7280' }}>
+                <p style={{ margin: '5px 0', color: '#6b7280', fontSize: isMobile ? '13px' : '14px' }}>
                   • Mantener niveles universitarios
                 </p>
-                <p style={{ margin: '5px 0', color: '#6b7280' }}>
+                <p style={{ margin: '5px 0', color: '#6b7280', fontSize: isMobile ? '13px' : '14px' }}>
                   • Políticas de retención estudiantil
                 </p>
               </div>
@@ -483,44 +657,50 @@ const EducationDashboard = () => {
         </div>
 
         {/* Tabla de Datos */}
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.tableHeader} colSpan="6">
-                <FileSpreadsheet size={20} style={{ marginRight: '10px' }} />
-                Datos Detallados de Deserción por Nivel Educativo
-              </th>
-            </tr>
-            <tr style={{ backgroundColor: '#f9fafb' }}>
-              <th style={styles.th}>Nivel de Formación</th>
-              <th style={styles.th}>2018</th>
-              <th style={styles.th}>2019</th>
-              <th style={styles.th}>2020</th>
-              <th style={styles.th}>2021</th>
-              <th style={styles.th}>2022</th>
-            </tr>
-          </thead>
-          <tbody>
-            {educationData.map((row, index) => (
-              <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9fafb' }}>
-                <td style={{...styles.td, fontWeight: 'bold', color: '#1f2937'}}>{row.nivel}</td>
-                <td style={styles.td}>{row[2018]}%</td>
-                <td style={styles.td}>{row[2019]}%</td>
-                <td style={styles.td}>{row[2020]}%</td>
-                <td style={styles.td}>{row[2021]}%</td>
-                <td style={styles.td}>{row[2022]}%</td>
+        <div style={styles.tableContainer} className="table-container">
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={styles.tableHeader} colSpan="6">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <FileSpreadsheet size={20} />
+                    <span>Datos Detallados de Deserción por Nivel Educativo</span>
+                  </div>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+              <tr style={{ backgroundColor: '#f9fafb' }}>
+                <th style={styles.th}>Nivel de Formación</th>
+                <th style={styles.th}>2018</th>
+                <th style={styles.th}>2019</th>
+                <th style={styles.th}>2020</th>
+                <th style={styles.th}>2021</th>
+                <th style={styles.th}>2022</th>
+              </tr>
+            </thead>
+            <tbody>
+              {educationData.map((row, index) => (
+                <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9fafb' }}>
+                  <td style={{...styles.td, fontWeight: 'bold', color: '#1f2937'}}>{row.nivel}</td>
+                  <td style={styles.td}>{row[2018]}%</td>
+                  <td style={styles.td}>{row[2019]}%</td>
+                  <td style={styles.td}>{row[2020]}%</td>
+                  <td style={styles.td}>{row[2021]}%</td>
+                  <td style={styles.td}>{row[2022]}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {/* Footer */}
-        {/* <div style={{ textAlign: 'center', marginTop: '40px', color: 'white', opacity: 0.8 }}>
-          <p>📊 Dashboard desarrollado para el análisis de estadísticas educativas</p>
-          <p style={{ fontSize: '14px' }}>
+        {/* <div style={styles.footer}>
+          <p style={{ fontSize: isMobile ? '14px' : '16px' }}>
+            📊 Dashboard desarrollado para el análisis de estadísticas educativas
+          </p>
+          <p style={{ fontSize: isMobile ? '12px' : '14px', marginTop: '5px' }}>
             Fuente: SPADIES - Sistema para la Prevención y Análisis de la Deserción en las IES
           </p>
-          <p style={{ fontSize: '12px', marginTop: '10px' }}>
+          <p style={{ fontSize: isMobile ? '11px' : '12px', marginTop: '10px' }}>
             🔗 Backend Python listo para recibir datos en: http://localhost:8000/api/upload-data
           </p>
         </div> */}
