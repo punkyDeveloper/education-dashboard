@@ -285,9 +285,7 @@ const EducationDashboard = () => {
         {/* Header */}
         <div style={styles.header}>
           <h1 style={styles.title}>📊 Dashboard Estadísticas Educativas</h1>
-          <p style={styles.subtitle}>
-            Ministerio de Educación Nacional - Análisis de Deserción 2018-2022
-          </p>
+
         </div>
 
         {/* Panel de Control */}
@@ -517,7 +515,7 @@ const EducationDashboard = () => {
         </table>
 
         {/* Footer */}
-        <div style={{ textAlign: 'center', marginTop: '40px', color: 'white', opacity: 0.8 }}>
+        {/* <div style={{ textAlign: 'center', marginTop: '40px', color: 'white', opacity: 0.8 }}>
           <p>📊 Dashboard desarrollado para el análisis de estadísticas educativas</p>
           <p style={{ fontSize: '14px' }}>
             Fuente: SPADIES - Sistema para la Prevención y Análisis de la Deserción en las IES
@@ -525,7 +523,7 @@ const EducationDashboard = () => {
           <p style={{ fontSize: '12px', marginTop: '10px' }}>
             🔗 Backend Python listo para recibir datos en: http://localhost:8000/api/upload-data
           </p>
-        </div>
+        </div> */}
       </div>
     </>
   );
